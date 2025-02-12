@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriGen - AI Nutrition Assistant</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            margin: 0;
+            color: white;
+            text-align: center;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 1.5s ease-in-out;
+            transition: transform 0.5s;
+        }
+        .container:hover {
+            transform: rotateY(5deg) scale(1.05);
+        }
+        .input-box {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        input, select, button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            background: #ff8c00;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+            box-shadow: 0px 0px 10px rgba(255, 140, 0, 0.8);
+        }
+        button:hover {
+            background: #ffa726;
+            transform: scale(1.1) rotate(-3deg);
+            box-shadow: 0px 0px 20px rgba(255, 140, 0, 1);
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>NutriGen - AI Nutrition Assistant</h1>
+        <p>Enter your weight and preferences to get a personalized meal plan.</p>
+        
+        <div class="input-box">
+            <input type="number" id="weight-input" placeholder="Enter weight (kg)">
+            <select id="goal">
+                <option value="gain">Weight Gain</option>
+                <option value="loss">Weight Loss</option>
+            </select>
+            <select id="diet-type">
+                <option value="vegetarian">Vegetarian</option>
+                <option value="non-vegetarian">Non-Vegetarian</option>
+            </select>
+            <button id="generate-btn">Get Plan</button>
+        </div>
+        
+        <div class="input-box">
+            <input type="text" id="food-input" placeholder="Enter food name">
+            <button id="nutrition-btn">Check Nutrition</button>
+        </div>
+        
+        <div id="meal-plan" class="hidden"></div>
+        <div id="food-results" class="hidden"></div>
+    </div>
+    
+    <script>
+        document.getElementById("generate-btn").addEventListener("click", function() {
+            let weight = parseInt(document.getElementById("weight-input").value);
+            let goal = document.getElementById("goal").value;
+            let dietType = document.getElementById("diet-type").value;
+            let mealPlanDiv = document.getElementById("meal-plan");
+            
+            if (!weight) {
+                alert("Please enter a valid weight.");
+                return;
+            }
+            
+            let mealPlans = {
+                gain: {
+                    vegetarian: "Morning: Oats with nuts | Afternoon: Lentil soup | Evening: Peanut butter toast | Dinner: Paneer curry with rice.",
+                    "non-vegetarian": "Morning: Boiled eggs | Afternoon: Grilled chicken salad | Evening: Greek yogurt | Dinner: Fish with quinoa."
+                },
+                loss: {
+                    vegetarian: "Morning: Green smoothie | Afternoon: Quinoa salad | Evening: Hummus with veggies | Dinner: Stir-fried tofu.",
+                    "non-vegetarian": "Morning: Scrambled eggs | Afternoon: Grilled salmon | Evening: Cottage cheese | Dinner: Chicken with veggies."
+                }
+            };
+            
+            let selectedPlan = mealPlans[goal][dietType];
+            let mealPlanHTML = `<h3>Meal Plan:</h3><p>${selectedPlan}</p>`;
+            
+            mealPlanDiv.innerHTML = mealPlanHTML;
+            mealPlanDiv.classList.remove("hidden");
+        });
+
+        document.getElementById("nutrition-btn").addEventListener("click", function() {
+            let foodInput = document.getElementById("food-input").value.toLowerCase();
+            let foodData = {
+                "apple": { calories: 52, protein: 0.3, nutrients: "Vitamin C, Fiber, Potassium" },
+                "carrot": { calories: 41, protein: 0.9, nutrients: "Beta-carotene, Fiber, Vitamin K" },
+                "chicken": { calories: 335, protein: 27, nutrients: "Vitamin B6, Zinc, Iron" },
+                "oats": { calories: 154, protein: 6, nutrients: "Fiber, Magnesium, Iron" },
+                "banana": { calories: 89, protein: 1.1, nutrients: "Potassium, Vitamin C" }
+            };
+            
+            let foodInfo = foodData[foodInput] || { calories: "97", protein: "6", nutrients:"Potassium, Vitamin C, vitamin K" };
+            let foodResults = document.getElementById("food-results");
+            foodResults.innerHTML = `<h3>Nutrition Info:</h3>
+            <p>Calories: ${foodInfo.calories} kcal</p>
+            <p>Protein: ${foodInfo.protein} g</p>
+            <p>Nutrients: ${foodInfo.nutrients}</p>`;
+            foodResults.classList.remove("hidden");
+        });
+    </script>
+</body>
+</html>
